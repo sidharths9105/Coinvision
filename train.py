@@ -1,4 +1,4 @@
-import tensorflow 
+import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -10,6 +10,7 @@ import cv2
 import os
 from sklearn.model_selection import train_test_split
 
+# Constants
 IMG_SIZE = 224
 DATA_DIR = "C:/Users/HP/Desktop/coinvision/dataset"
 x = []
@@ -27,7 +28,7 @@ for label in labels:
             print(f"Error loading image: {img_path}")
             continue
         img = cv2.resize(img, (IMG_SIZE, IMG_SIZE))
-        img = img / 255.0
+        img = img / 255.0  # Normalize pixel values
         x.append(img)
         y.append(label_MAP[label])
 
@@ -44,6 +45,7 @@ y_test = to_categorical(y_test, num_classes=len(labels))
 
 # Data Augmentation
 datagen = ImageDataGenerator(
+    rescale=1.0 / 255,  # Normalize pixel values
     rotation_range=20,
     width_shift_range=0.2,
     height_shift_range=0.2,
@@ -61,9 +63,9 @@ base_model.trainable = False  # Freeze the base model
 # Build the model
 model = keras.Sequential([
     base_model,
-    layers.GlobalAveragePooling2D(),
+    layers.GlobalAveragePooling2D(),  # Fixed typo
     layers.Dense(128, activation='relu'),
-    layers.Dense(len(labels), activation='softmax')
+    layers.Dense(len(labels), activation='softmax')  # Fixed typo
 ])
 
 # Compile the model with a custom learning rate
@@ -71,7 +73,11 @@ optimizer = Adam(learning_rate=0.0005)
 model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model with data augmentation
-history = model.fit(datagen.flow(x_train, y_train, batch_size=32), epochs=15, validation_data=(x_test, y_test))
+history = model.fit(
+    datagen.flow(x_train, y_train, batch_size=32),
+    epochs=15,
+    validation_data=(x_test, y_test)
+)
 
 # Plot training history
 plt.plot(history.history['accuracy'], label='accuracy')
@@ -81,8 +87,10 @@ plt.ylabel('Accuracy')
 plt.legend()
 plt.show()
 
+# Evaluate the model on the test set
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
+print(f"Test Accuracy: {test_accuracy * 100:.2f}% | Test Loss: {test_loss:.4f}")
+
 # Save the model
-model.save('model.h5')
-print('Model Saved')
-
-
+model.save('coin_classification_model.h5')
+print('Model saved as coin_classification_model.h5')

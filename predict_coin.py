@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
 import os
 # Load the model
-model = load_model('model.h5')
+model = load_model('coin_classification_model.h5')
 IMG_SIZE = 224
 labels = sorted(os.listdir('C:/Users/HP/Desktop/coinvision/dataset'))
 
@@ -25,4 +25,4 @@ def predict_coin(image_path):
     predicted_label = labels[np.argmax(pred)]  # Get the class with highest probability
     return predicted_label
 
-print(predict_coin('image634.jpg'))
+print(predict_coin('test01.jpg'))
