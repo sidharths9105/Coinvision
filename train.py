@@ -65,4 +65,4 @@ history = model.fit(
 
 # Save the model
 model.save("coin_classification_model.h5")
-print("Model saved as coin_classification_model.h5")
+print("Model saved as coin_classification_model1.h5")
