@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model
 import os
 
 # Load the trained model
-model = load_model("coin_classification_model.h5")
+model = load_model("coin_classification_model1.h5")
 
 # Define coin denominations
 denominations = {0: '1', 1: '2', 2: '5', 3: '10', 4: '20'}
