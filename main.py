@@ -17,7 +17,7 @@ coin_values = {"1 Rupee": 1, "10 Rupees": 10, "2 Rupees": 2, "5 Rupees": 5}
 # GUI Setup
 root = tk.Tk()
 root.title("COINVISION")
-root.state('zoomed')  # Set window to full screen
+root.attributes('-fullscreen', True)  # Set window to full screen
 root.resizable(False, False)  # Fix window size
 
 # Layout Frames
@@ -35,7 +35,10 @@ def process_image():
     if not file_path:
         return
     
+    # Resize image before processing
     image = cv2.imread(file_path)
+    image = cv2.resize(image, (1280, 960), interpolation=cv2.INTER_LINEAR)
+    
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Apply Gaussian Blur
